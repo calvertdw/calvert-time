@@ -1,0 +1,53 @@
+plugins {
+  id "us.ihmc.gradle.ihmc-build" version "0.0.16"
+  id "com.jfrog.bintray" version "1.6"
+}
+
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.7
+version = '1.0.1'
+
+repositories {
+   mavenLocal()
+   mavenCentral()
+   maven {
+       url  "http://dl.bintray.com/calvertdw/maven-release" 
+   }
+}
+
+dependencies
+{
+   compile 'junit:junit:4.12'
+   compile 'com.calvertsoftware:CalvertData:1.0.1'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId 'com.calvertsoftware'
+            artifactId 'CalvertTime'
+            version project.version
+        }
+    }
+}
+
+bintray {
+   user = project.property('bintray_username')
+   key = project.property('bintray_api_key')
+   
+   publications = ['mavenJava']
+   
+   pkg {
+      repo = 'maven-release'
+      name = 'CalvertTime'
+      licenses = ['Apache-2.0']
+      vcsUrl = 'https://github.com/calvertdw/calvert-time.git'
+      
+      version {
+         name = project.version
+      }
+   }
+}
